@@ -1,0 +1,17 @@
+// https://leetcode.com/problems/design-hashset/
+//
+//
+class MyHashSet {
+public:
+  vector<bool> ans;
+
+  MyHashSet() {
+    ans.resize(1e6 + 1, false); // all initialize to false
+  }
+
+  void add(int key) { ans[key] = true; }
+
+  void remove(int key) { ans[key] = false; }
+
+  bool contains(int key) { return ans[key]; }
+};

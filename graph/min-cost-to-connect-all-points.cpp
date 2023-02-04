@@ -1,5 +1,6 @@
 // https://leetcode.com/problems/min-cost-to-connect-all-points/
 
+
 // priority_queue  O(n^2logn)
 class Solution {
 public:

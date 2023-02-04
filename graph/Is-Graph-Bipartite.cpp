@@ -1,6 +1,6 @@
 // https://leetcode.com/problems/is-graph-bipartite/
+// DFS
 //
-
 class Solution {
 public:
   vector<int> col;

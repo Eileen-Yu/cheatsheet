@@ -1,7 +1,7 @@
 // https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 //
 //
-// BFS:
+// BFS: adjacency matrix + queue
 class Solution {
 public:
   int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst,

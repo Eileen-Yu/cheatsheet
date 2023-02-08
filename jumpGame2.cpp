@@ -17,12 +17,17 @@ public:
         // already reach the last one
         if (i + j >= len)
           return rslt[len - 1];
-        // the minimum step to the i+j-th node
+        // update the minimum step to the i+j-th node
+        rslt[i + j] = min(rslt[i + j], rslt[i] + 1);
+        /*
         if (rslt[i] + 1 < rslt[i + j]) {
           rslt[i + j] = rslt[i] + 1;
         }
+        */
       }
     }
     return rslt[len - 1];
   }
 };
+
+// 2. greedy

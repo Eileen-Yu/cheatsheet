@@ -31,3 +31,27 @@ public:
 };
 
 // 2. greedy
+class Solution {
+public:
+  int jump(vector<int> &nums) {
+    // record the farest reachable node of one jump
+    int maxFar = 0;
+    // record the next starting point
+    int end = 0;
+    int ans = 0;
+
+    // don't need to jump at the last node
+    for (int i = 0; i < nums.size() - 1; i++) {
+      maxFar = max(maxFar, i + nums[i]);
+      // if (maxFar == nums.size() - 1) return ans+1;
+
+      // need to jump another time
+      if (i == end) {
+        ans++;
+        end = maxFar;
+      }
+    }
+
+    return ans;
+  }
+};

@@ -58,6 +58,9 @@ public:
       if (i != 0 && nums[i] == nums[i - 1])
         continue;
       int j = i + 1;
+      // skip duplicates
+      while (j == i && j < len - 1)
+        j++;
       int k = len - 1; // start from the last element
       while (j < k) {
         if (nums[i] + nums[j] + nums[k] == 0) {

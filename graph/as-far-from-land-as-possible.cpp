@@ -8,6 +8,7 @@
 // the number of the iteration is the answer
 // ref:
 // https://leetcode.com/problems/as-far-from-land-as-possible/solutions/3166138/day-41-c-bfs-easiest-beginner-friendly-approach-o-n-2-time-and-o-n-2-approach/
+
 class Solution {
 public:
   int maxDistance(vector<vector<int>> &grid) {

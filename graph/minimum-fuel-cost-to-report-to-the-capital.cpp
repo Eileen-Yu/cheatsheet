@@ -17,10 +17,11 @@ public:
     }
     // has travsed one complete path
 
+    // tmp is the fuel needed to traverse this path
     // e.g, if there're 3 people and 5 seats:
-    // 1. no full car, ans = 0
+    // 1. no full car, tmp = 0
     long long tmp = count / seats;
-    // 2. need one not full car, ans = 1
+    // 2. need one not full car, tmp = 1
     if (count % seats)
       tmp++;
     // if this is not the root

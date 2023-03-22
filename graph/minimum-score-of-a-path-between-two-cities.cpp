@@ -126,3 +126,69 @@ public:
     return ans;
   }
 };
+
+// 4. Union set
+// to find those node connected, remove isolated nodes
+class Solution {
+public:
+  // root record the root of each node root[i]
+  // rank record the rank of each node rank[i]
+  vector<int> root, rank;
+
+  // recursively find the root of node x
+  int find(int x) {
+    // check if current vertex is the root
+    if (x == root[x])
+      return root[x];
+    // else update its parent to be the root of the set that contains current
+    // parent
+    return root[x] = find(root[x]);
+  }
+
+  void createUnion(int x, int y) {
+    // find the root of node x and y
+    int rootX = find(x);
+    int rootY = find(y);
+    if (rootX == rootY)
+      return;
+    // merge the sets
+    if (rank[rootX] < rank[rootY])
+      root[rootX] = rootY;
+    else if (rank[rootX] > rank[rootY])
+      root[rootY] = rootX;
+    else { // if ranks are the same
+      root[rootY] = rootX;
+      rank[rootX]++;
+    }
+  }
+
+  int minScore(int n, vector<vector<int>> &roads) {
+    root.resize(n + 1);
+    rank.resize(n + 1);
+    // initialize root and rank
+    for (int i = 0; i < n + 1; i++) {
+      root[i] = i;
+      rank[i] = 0;
+    }
+
+    int ans = INT_MAX;
+    // merge the union sets, update the root[]
+    for (auto i : roads) {
+      createUnion(i[0], i[1]);
+    }
+
+    // start is always node 1
+    int root1 = find(1);
+    for (auto i : roads) {
+      int rootX = find(i[0]);
+      int rootY = find(i[1]);
+      // if node x,y can all be connected with node 1
+      if (rootX == root1 && rootY == root1) {
+        // means we can pick the score in this road
+        ans = min(ans, i[2]);
+      }
+    }
+
+    return ans;
+  }
+};

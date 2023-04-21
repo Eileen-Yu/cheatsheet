@@ -39,3 +39,19 @@ public:
     return right;
   }
 }
+
+// 2. Prefix Sum + Average (maths)
+class Solution {
+public:
+  int minimizeArrayValue(vector<int> &nums) {
+    // sum to store all prefix sum
+    long long sum = 0, ans = 0;
+    for (int i = 0; i < nums.size(); i++) {
+      sum += nums[i];
+      long long aveVal = ceil(sum / (i + 1.0));
+      ans = max(ans, aveVal);
+    }
+
+    return ans;
+  }
+};

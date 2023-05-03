@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/longest-palindromic-substring/description/
-// dp
+// 1. dp
 class Solution {
 public:
   string longestPalindrome(string s) {
@@ -41,5 +41,39 @@ public:
     }
 
     return ans;
+  }
+};
+
+// 2. recursion + expand from center
+class Solution {
+public:
+  string longestPalindrome(string s) {
+    string ans = "";
+    for (int i = 0; i < s.length(); i++) {
+      // pick the centric point, and try to expand to left and right
+      // for odd string
+      expand(i, i, s, ans);
+      // for even string
+      expand(i, i + 1, s, ans);
+    }
+    return ans;
+  }
+
+  void expand(int i, int j, string &s, string &ans) {
+    while (i >= 0 && j < s.length()) {
+      if (s[i] != s[j])
+        break;
+      // else expand to continue to check
+      i--;
+      j++;
+    }
+
+    // update the ans
+    // left idx of current palindrome: i + 1
+    // right idx of current palindrome: j - 1
+    // current palindrome length: j-1 - (i+1) + 1 = j-i-1
+    if (ans.length() < j - i - 1) {
+      ans = s.substr(i + 1, j - i - 1);
+    }
   }
 };

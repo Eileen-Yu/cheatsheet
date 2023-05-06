@@ -1,6 +1,56 @@
 // https://leetcode.com/problems/course-schedule/description/
 
 // DFS to detect if there is a cycle
+// 1. color algorithm to mark status
+class Solution {
+public:
+  bool isCycle(int cur, vector<vector<int>> &adj, vector<int> &visited) {
+    // we meet this course again, means there is a cycle
+    if (visited[cur] == 1)
+      return true;
+
+    // need to check if there is a cycle
+    if (visited[cur] == 0) {
+      // mark this as being checked
+      visited[cur] = 1;
+      for (auto neighbor : adj[cur]) {
+        // as long as there is a cycle, return false
+        if (isCycle(neighbor, adj, visited))
+          return true;
+      }
+    }
+
+    // if there is no cycle, mark this course as can be safely taken
+    visited[cur] = 2;
+    return false;
+  }
+
+  bool canFinish(int numCourses, vector<vector<int>> &prerequisites) {
+    // adjacency matrix
+    vector<vector<int>> adj(numCourses);
+
+    for (auto i : prerequisites) {
+      int course = i[0];
+      int pre = i[1];
+      adj[course].push_back(pre);
+    }
+
+    // mark the status of a certain course
+    // 0: not visited
+    // 1: is now visiting to check if there is a cycle
+    // 2: already checked that can be safely taken
+    vector<int> visited(numCourses, 0);
+
+    // check course one by one
+    for (int i = 0; i < numCourses; i++) {
+      // if there is any cycle, return false
+      if (isCycle(i, adj, visited))
+        return false;
+    }
+
+    return true;
+  }
+};
 
 // 2. plain version
 class Solution {

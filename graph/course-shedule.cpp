@@ -125,3 +125,64 @@ public:
     return true;
   }
 };
+
+// 3. BFS to detect cycle
+// indegree: pick node with indegree = 0 as starting point,
+// try to eliminate its neighbors' indegree
+// if indegree of all nodes can be eliminated, then there is no cycle
+
+class Solution {
+public:
+  bool canFinish(int numCourses, vector<vector<int>> &prerequisites) {
+    if (prerequisites.empty())
+      return true;
+    // adjacency matrix:
+    // idx: prerequisites, vector: courses
+    // this is to eliminate courses that can be safely taken by knowing its pre
+    // courses are safe
+    vector<vector<int>> adj(numCourses);
+    // idx: course, value: number of prerequisites for this course
+    vector<int> degree(numCourses, 0);
+
+    for (auto i : prerequisites) {
+      int course = i[0];
+      int pre = i[1];
+      adj[pre].push_back(course);
+      degree[course]++;
+    }
+    // BFS
+    queue<int> q;
+    // pick out courses that don't need prerequistes to init the queue
+    for (int i = 0; i < degree.size(); i++) {
+      if (degree[i] == 0) {
+        q.push(i);
+        // course waiting to be check --
+        numCourses--;
+      }
+    }
+
+    while (!q.empty()) {
+      int size = q.size();
+
+      while (size--) {
+        int tmp = q.front();
+        q.pop();
+
+        for (auto course : adj[tmp]) {
+          // one pre of this course can be met
+          degree[course]--;
+          // check if this course can be fully safe
+          // then mark this course as a safe prerequisites
+          if (degree[course] == 0) {
+            q.push(course);
+            // -- course waiting to be check
+            numCourses--;
+          }
+        }
+      }
+    }
+
+    // if no course waiting to be check, means all can be met
+    return numCourses == 0;
+  }
+};

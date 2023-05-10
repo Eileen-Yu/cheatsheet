@@ -1,42 +1,48 @@
 // https://leetcode.com/problems/spiral-matrix-ii/
+// narrow the rowBegin, rowEnd, colBegin, colEnd
+// same mathod to spiral-matrix-i
 
 class Solution {
 public:
   vector<vector<int>> generateMatrix(int n) {
     vector<vector<int>> ans(n, vector<int>(n));
-    int beg = 0, end = n - 1, p = 0, k = 1; // p:tempPtr, k: 0~n-1
-    while (beg < end) {
+    int rowBegin = 0, rowEnd = n - 1;
+    int colBegin = 0, colEnd = n - 1;
+    // element from 1 to n^2
+    int x = 1;
+
+    while (rowBegin <= rowEnd && colBegin <= colEnd) {
       // left to right
-      p = beg;
-      while (p < end) { // the corner is to be dealt in the next loop
-        ans[beg][p++] = k++;
+      for (int j = colBegin; j <= colEnd && x <= n * n; j++) {
+        ans[rowBegin][j] = x++;
       }
+      rowBegin++;
 
       // top to bottom
-      p = beg;
-      while (p < end) {
-        ans[p++][end] = k++;
+      for (int i = rowBegin; i <= rowEnd && x <= n * n; i++) {
+        ans[i][colEnd] = x++;
       }
+      colEnd--;
 
       // right to left
-      p = end;
-      while (p > beg) {
-        ans[end][p--] = k++;
+      // need to ensure -> and <- are in different rows
+      if (rowBegin <= rowEnd) {
+        for (int j = colEnd; j >= colBegin && x <= n * n; j--) {
+          ans[rowEnd][j] = x++;
+        }
+        rowEnd--;
       }
 
       // bottom to top
-      p = end;
-      while (p > beg) {
-        ans[p--][beg] = k++;
+      // need to ensure down and up are in various columns
+      if (colBegin <= colEnd) {
+        for (int i = rowEnd; i >= rowBegin && x <= n * n; i--) {
+          ans[i][colBegin] = x++;
+        }
+        colBegin++;
       }
-
-      beg++;
-      end--;
     }
 
-    // the middle one
-    if (beg == end)
-      ans[beg][end] = k;
     return ans;
   }
 };

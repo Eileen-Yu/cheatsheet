@@ -26,3 +26,52 @@ public:
     return dp[m][n];
   }
 };
+
+// 2. backtracking, would TLE in some cases
+class Solution {
+public:
+  // find the next pair after pair{idx1. idx2}
+  pair<int, int> helper(int idx1, int idx2, vector<int> &nums1,
+                        vector<int> &nums2) {
+    int m = nums1.size(), n = nums2.size();
+    for (int i = idx1 + 1; i < m; i++) {
+      for (int j = idx2 + 1; j < n; j++) {
+        if (nums1[i] == nums2[j])
+          return {i, j};
+      }
+    }
+    // if no matching pair
+    return {-1, -1};
+  }
+
+  // backtracking: take / not take
+  void recursion(int &tmp, int &ans, int idx1, int idx2, vector<int> &nums1,
+                 vector<int> &nums2) {
+    auto [i, j] = helper(idx1, idx2, nums1, nums2);
+    // if no matching pair
+    if (i == -1 && j == -1)
+      return;
+
+    // if there is matching pair
+    // 1. we take this pair
+    tmp += 1;
+    ans = max(ans, tmp);
+    recursion(tmp, ans, i, j, nums1, nums2);
+
+    // 2. we don't take this pair
+    tmp -= 1;
+    // we would skip nums1[i] and start from nums2[idx2], this can avoid take
+    // {i,j}
+    recursion(tmp, ans, i, idx2, nums1, nums2);
+  }
+
+  int maxUncrossedLines(vector<int> &nums1, vector<int> &nums2) {
+    int m = nums1.size(), n = nums2.size();
+    int ans = 0;
+    int tmp = 0;
+
+    recursion(tmp, ans, -1, -1, nums1, nums2);
+
+    return ans;
+  }
+};

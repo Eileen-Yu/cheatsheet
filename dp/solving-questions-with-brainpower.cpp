@@ -46,3 +46,36 @@ public:
     return ans;
   }
 };
+
+// 2. memoization (recursion, divide the whole problem into small subproblems
+// duing the recursion)
+// use the table to avoid duplicate calculation
+class Solution {
+public:
+  long long recursion(vector<vector<int>> &questions, int idx,
+                      vector<long long> &dp) {
+    // when to return
+    if (idx >= questions.size())
+      return 0;
+
+    // already calculated
+    if (dp[idx] != -1)
+      return dp[idx];
+
+    int score = questions[idx][0];
+    int steps = questions[idx][1];
+    int skipTo = idx + steps + 1;
+
+    // take / not take this question
+    return dp[idx] = max(score + recursion(questions, skipTo, dp),
+                         recursion(questions, idx + 1, dp));
+  }
+
+  long long mostPoints(vector<vector<int>> &questions) {
+    long n = questions.size();
+    // dp[i] represents the max accumulative score we may get at i-th question
+    // from top to bottom
+    vector<long long> dp(n, -1);
+    return recursion(questions, 0, dp);
+  }
+};

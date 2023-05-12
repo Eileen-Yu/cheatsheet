@@ -79,3 +79,33 @@ public:
     return recursion(questions, 0, dp);
   }
 };
+
+// 3. tabulation: loop (iteration)
+// use a table to record result of small subprolems
+// then calculate the ultimate ans based on those small results
+
+class Solution {
+public:
+  long long mostPoints(vector<vector<int>> &questions) {
+    long long n = questions.size();
+    // dp[i] represents the max score when we meet the i-th questions
+    // i's range: 0 ~ n, n is the basis
+    vector<long long> dp(n + 1, 0);
+
+    // tabluation, just from back to front
+    for (long long i = n - 1; i >= 0; i--) {
+      long long score = questions[i][0];
+      long long step = questions[i][1];
+      long long skipTo = i + step + 1;
+      // if after take this course, we can no longer take latter courses
+      // then in reverse this course would be the first to take, so skipT0 = n
+      // is the basis as dp[n] = 0 forever
+      if (skipTo >= n)
+        skipTo = n;
+      // take / not take this question
+      dp[i] = max(score + dp[skipTo], dp[i + 1]);
+    }
+
+    return dp[0];
+  }
+};

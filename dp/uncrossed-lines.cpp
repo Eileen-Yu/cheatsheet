@@ -1,5 +1,6 @@
 // https://leetcode.com/problems/uncrossed-lines/description/
-// DP + memoization (record)
+// DP + tabulation (iteration to record, first subproblems, then solve the
+// entire problem, accumulative)
 class Solution {
 public:
   int maxUncrossedLines(vector<int> &nums1, vector<int> &nums2) {

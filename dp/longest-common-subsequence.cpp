@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/longest-common-subsequence/description/
-// dp, memoization
+// dp, tabulation(iterative, first subproblems, then the whole problem)
 // very similar idea to
 // https://leetcode.com/problems/uncrossed-lines/description/
 
@@ -7,7 +7,7 @@ class Solution {
 public:
   int longestCommonSubsequence(string text1, string text2) {
     int m = text1.length(), n = text2.length();
-    // memoization, dp[i][j] represents the longest common subsequence for
+    // tabulation, dp[i][j] represents the longest common subsequence for
     // text1[0,i) and text2[0,j) i's range: 0 ~ m, j's range : 0 ~ n
     int dp[m + 1][n + 1];
     // init the dp

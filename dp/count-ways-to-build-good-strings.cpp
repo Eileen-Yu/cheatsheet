@@ -38,3 +38,32 @@ public:
     return recursion(low, high, 0, zero, one, dp);
   }
 };
+
+// 2. tabulation + iteration
+// key idea: dp[i] = dp[i-zero] + dp[i-one]
+
+class Solution {
+public:
+  int mod = 1e9 + 7;
+
+  int countGoodStrings(int low, int high, int zero, int one) {
+    // dp[i] represents the maximum good strings we can get when the length is i
+    // i's range: 0 ~ high
+    vector<int> dp(high + 1, 0);
+    // for the basis, when i = 1, it would need to rely on dp[0] if zero / one =
+    // 1
+    dp[0] = 1;
+    int ans = 0;
+
+    for (int i = 1; i <= high; i++) {
+      dp[i] =
+          ((i >= zero ? dp[i - zero] : 0) + (i >= one ? dp[i - one] : 0)) % mod;
+      // if this i is within the range [low,high], add the number of
+      // possibilities of this idx to the ans
+      if (i >= low)
+        ans = (ans + dp[i]) % mod;
+    }
+
+    return ans;
+  }
+};

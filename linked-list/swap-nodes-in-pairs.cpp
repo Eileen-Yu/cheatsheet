@@ -1,5 +1,20 @@
 // https://leetcode.com/problems/swap-nodes-in-pairs/description/
-//
+// 1. inplace, recursion
+class Solution {
+public:
+  ListNode *swapPairs(ListNode *head) {
+    if (!head || !head->next)
+      return head;
+
+    ListNode *tmp = head->next;
+    head->next = swapPairs(head->next->next);
+    // must be the last step, otherwise head->next = tmp && tmp->next = head
+    tmp->next = head;
+
+    return tmp;
+  }
+};
+
 // 2. not in place, create a new Linked List as the ans
 /**
  * Definition for singly-linked list.

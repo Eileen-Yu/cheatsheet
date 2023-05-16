@@ -7,15 +7,42 @@ public:
       return head;
 
     ListNode *tmp = head->next;
-    head->next = swapPairs(head->next->next);
-    // must be the last step, otherwise head->next = tmp && tmp->next = head
+    head->next = swapPairs(tmp->next);
+    // now the connection between head and tmp is broken, so we can have a new
+    // one
     tmp->next = head;
 
     return tmp;
   }
 };
 
-// 2. not in place, create a new Linked List as the ans
+// 2. inplace, iteration
+class Solution {
+public:
+  ListNode *swapPairs(ListNode *head) {
+    // special cases
+    if (!head || !head->next)
+      return head;
+
+    ListNode *dumb = new ListNode();
+    ListNode *pre = dumb;
+    ListNode *cur = head;
+
+    while (cur && cur->next) {
+      pre->next = cur->next;
+      // this is for the next loop
+      cur->next = pre->next->next;
+      pre->next->next = cur;
+
+      pre = cur;
+      cur = cur->next;
+    }
+
+    return dumb->next;
+  }
+};
+
+// 3. not in place, create a new Linked List as the ans
 /**
  * Definition for singly-linked list.
  * struct ListNode {

@@ -1,5 +1,6 @@
 // https://leetcode.com/problems/maximum-twin-sum-of-a-linked-list/description/
 // 1. stack, store value in the reverse sequence
+// Time Complexity : O(N) , Space Complexity : O(N)
 class Solution {
 public:
   int pairSum(ListNode *head) {
@@ -30,7 +31,57 @@ public:
   }
 };
 
-// 2. extra space: use vector to record value of each node
+// 2. tortoise and hare to find the middle node + reverse the second half linked
+// list Time Complexity : O(N) , Space Complexity : O(1)
+class Solution {
+public:
+  ListNode *reverse(ListNode *head) {
+    ListNode *cur = head;
+    ListNode *prev = nullptr;
+    ListNode *nextNode;
+
+    while (cur) {
+      // record the next based on the original direction, or it may lose later
+      nextNode = cur->next;
+      // reverse the direction of currecnt node
+      cur->next = prev;
+      // move forward
+      prev = cur;
+      cur = nextNode;
+    }
+
+    // update the head as the one in the last originally
+    return prev;
+  }
+
+  int pairSum(ListNode *head) {
+    ListNode *slow = head;
+    ListNode *fast = head;
+
+    // use tortoise and hare to find the middle node
+    while (slow->next && fast->next->next) {
+      slow = slow->next;
+      fast = fast->next->next;
+    }
+    // even, so the start node of the second half is this one
+    slow = slow->next;
+
+    ListNode *right = reverse(slow);
+    int ans = INT_MIN;
+    // because the reverse() would break the connect between the two halves
+    while (right) {
+      // add twins
+      ans = max(ans, head->val + right->val);
+      head = head->next;
+      right = right->next;
+    }
+
+    return ans;
+  }
+};
+
+// 3. extra space: use vector to record value of each node
+// Time Complexity : O(N) , Space Complexity : O(N)
 class Solution {
 public:
   int pairSum(ListNode *head) {

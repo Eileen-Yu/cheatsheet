@@ -1,6 +1,6 @@
 // https://leetcode.com/problems/minimum-number-of-vertices-to-reach-all-nodes/description/
 //
-// 2. indegree
+// 1. indegree
 class Solution {
 public:
   vector<int> findSmallestSetOfVertices(int n, vector<vector<int>> &edges) {

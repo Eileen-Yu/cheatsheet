@@ -1,6 +1,6 @@
 // https://leetcode.com/problems/top-k-frequent-elements/
 
-// multimap + vector resize
+// 1. multimap + vector resize
 / class Solution {
 public:
   multimap<int, int> invert(unordered_map<int, int> &mymap) {
@@ -33,35 +33,44 @@ public:
   }
 };
 
-// priority_queue, max heap
-typedef pair<int, int> pi;
+// 2. top k --> priority queue to sort the frequency
+// + map transformation
 class Solution {
 public:
-  struct myComparator {
-  public:
-    bool operator()(const pi &pi1, const pi &pi2) {
-      return pi1.second > pi2.second;
-    }
-  };
-
   vector<int> topKFrequent(vector<int> &nums, int k) {
-    unordered_map<int, int> record;
-    for (auto i : nums) {
-      record[i]++;
+    // key: digit, value: frequency
+    map<int, int> mp;
+    // fill in the map
+    for (int i = 0; i < nums.size(); i++) {
+      mp[nums[i]]++;
     }
-    priority_queue<pi, vector<pi>, myComparator> pq;
-    for (const auto &p : record) {
-      pq.push(p);
-      if (pq.size() > k) {
-        pq.pop();
+
+    // transform it to another map for easier search for the original digits
+    // later key: frequency, value: [digit1, digit2]
+    map<int, vector<int>> mp2;
+    for (auto i : mp) {
+      mp2[i.second].push_back(i.first);
+    }
+
+    // sort the frequency from big to small
+    priority_queue<int> pq;
+    for (auto i : mp2) {
+      pq.push(i.first);
+    }
+
+    vector<int> ans;
+
+    while (k != 0) {
+      int tmp = pq.top();
+      pq.pop();
+
+      // find the corresponding digit
+      for (auto i : mp2[tmp]) {
+        ans.push_back(i);
+        k--;
       }
     }
 
-    vector<int> result;
-    while (!pq.empty()) {
-      result.push_back(pq.top().first);
-      pq.pop();
-    }
-    return result;
+    return ans;
   }
 };

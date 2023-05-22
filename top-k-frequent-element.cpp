@@ -1,33 +1,31 @@
 // https://leetcode.com/problems/top-k-frequent-elements/
-
-// 1. multimap + vector resize
-/ class Solution {
+// top k --> priority_queue
+// 1. map + pq(pair)
+class Solution {
 public:
-  multimap<int, int> invert(unordered_map<int, int> &mymap) {
-    multimap<int, int> multiMap;
-
-    unordered_map<int, int>::iterator it;
-    for (it = mymap.begin(); it != mymap.end(); it++) {
-      multiMap.insert(make_pair(it->second, it->first));
+  vector<int> topKFrequent(vector<int> &nums, int k) {
+    // key: digit, value: frequency
+    map<int, int> mp;
+    for (int i = 0; i < nums.size(); i++) {
+      mp[nums[i]]++;
     }
 
-    return multiMap;
-  }
+    // pair: {frequency, digit}
+    // pq would sort based on the first value of pair
+    priority_queue<pair<int, int>> pq;
+    for (auto i : mp) {
+      // sort by the frequency
+      pq.push({i.second, i.first});
+    }
 
-  vector<int> topKFrequent(vector<int> &nums, int k) {
-    unordered_map<int, int> mp;
     vector<int> ans;
 
-    for (int i = 0; i < nums.size(); i++)
-      mp[nums[i]]++;
+    while (k--) {
+      auto tmp = pq.top();
+      pq.pop();
 
-    multimap<int, int> newMap = invert(mp);
-
-    for (multimap<int, int>::reverse_iterator nt = newMap.rbegin();
-         nt != newMap.rend(); nt++)
-      ans.push_back(nt->second);
-
-    ans.resize(k);
+      ans.push_back(tmp.second);
+    }
 
     return ans;
   }
@@ -70,6 +68,39 @@ public:
         k--;
       }
     }
+
+    return ans;
+  }
+};
+
+// 3. multimap + vector resize
+class Solution {
+public:
+  multimap<int, int> invert(unordered_map<int, int> &mymap) {
+    multimap<int, int> multiMap;
+
+    unordered_map<int, int>::iterator it;
+    for (it = mymap.begin(); it != mymap.end(); it++) {
+      multiMap.insert(make_pair(it->second, it->first));
+    }
+
+    return multiMap;
+  }
+
+  vector<int> topKFrequent(vector<int> &nums, int k) {
+    unordered_map<int, int> mp;
+    vector<int> ans;
+
+    for (int i = 0; i < nums.size(); i++)
+      mp[nums[i]]++;
+
+    multimap<int, int> newMap = invert(mp);
+
+    for (multimap<int, int>::reverse_iterator nt = newMap.rbegin();
+         nt != newMap.rend(); nt++)
+      ans.push_back(nt->second);
+
+    ans.resize(k);
 
     return ans;
   }

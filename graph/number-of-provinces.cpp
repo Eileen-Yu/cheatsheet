@@ -44,3 +44,55 @@ public:
     return ans;
   }
 };
+
+// 2. BFS
+class Solution {
+public:
+  int findCircleNum(vector<vector<int>> &isConnected) {
+    int ans = 0;
+    int n = isConnected.size();
+
+    // adjacency matrix, 0 ~ n
+    vector<vector<int>> adj(n);
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (i == j)
+          continue;
+        // change node idx to 0,1...,n-1
+        if (isConnected[i][j] == 1)
+          adj[i].push_back(j);
+      }
+    }
+
+    vector<int> visited(n, false);
+    // for BFS
+    queue<int> q;
+    // try to start at each node
+    for (int i = 0; i < n; i++) {
+      if (visited[i])
+        continue;
+
+      // else, it is a new cluster
+      ans++;
+      q.push(i);
+      visited[i] = true;
+
+      while (!q.empty()) {
+        int size = q.size();
+        while (size--) {
+          int tmp = q.front();
+          q.pop();
+
+          for (auto neighbor : adj[tmp]) {
+            if (!visited[neighbor]) {
+              visited[neighbor] = true;
+              q.push(neighbor);
+            }
+          }
+        }
+      }
+    }
+
+    return ans;
+  }
+};

@@ -1,5 +1,31 @@
 // https://leetcode.com/problems/minimum-absolute-difference-in-bst/description/
-// 1. use extra vector to store the values
+// 1. no extra space, only traverse the BTS by inOrder + record the value of
+// last visitedn node
+class Solution {
+public:
+  int ans = INT_MAX;
+
+  void recursion(TreeNode *root, int &prev) {
+    if (!root)
+      return;
+    // inOrder traversal
+    recursion(root->left, prev);
+    if (prev != -1)
+      ans = min(ans, root->val - prev);
+    prev = root->val;
+    recursion(root->right, prev);
+  }
+
+  int getMinimumDifference(TreeNode *root) {
+    // record the value of the last visited node
+    // at very first we haven't visited ans node, so init it to -1
+    int prev = -1;
+    recursion(root, prev);
+    return ans;
+  }
+};
+
+// 2. use extra vector to store the values
 /**
  * Definition for a binary tree node.
  * struct TreeNode {

@@ -44,3 +44,41 @@ public:
     return recursion(prices, true, 0, fee);
   }
 };
+
+// 2. tabulation (loop) from the last to the begin
+class Solution {
+public:
+  // dp[i][0/1] represents the accumulative max profit we can make on the i-th
+  // day if we buy / not buy the stock
+  vector<vector<int>> dp;
+
+  int maxProfit(vector<int> &prices, int fee) {
+    int n = prices.size();
+    // i's range: 0 ~ n (actually would only involve 0 ~ n-1, dp[n] is the base
+    // case) init the dp so that ensure dp[n][0/1] = 0;
+    dp.resize(n + 1, vector<int>(2, 0));
+
+    // for each day, try each case (buy / not buy / move on)
+    // trick: start from the last day
+    for (int idx = n - 1; idx >= 0; idx--) {
+      // try buy / sell
+      for (int canBuy = 1; canBuy >= 0; canBuy--) {
+        int buy = INT_MIN, sell = INT_MIN;
+        // 1. try buy
+        if (canBuy)
+          buy = -prices[idx] + dp[idx + 1][!canBuy];
+        // 2. try sell
+        else
+          sell = prices[idx] - fee + dp[idx + 1][!canBuy];
+        // 3. try nothing happen
+        int move = dp[idx + 1][canBuy];
+
+        // fill in the table for this day
+        dp[idx][canBuy] = max({buy, sell, move});
+      }
+    }
+
+    // canBuy = true on the first day
+    return dp[0][1];
+  }
+};

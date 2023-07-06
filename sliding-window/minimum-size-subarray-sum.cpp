@@ -1,81 +1,35 @@
 // https://leetcode.com/problems/minimum-size-subarray-sum
-//
+// sliding window: once the sum of the elements within the window reached the
+// requirement,
+// 1. update the ans
+// 2. shorten the window
+
 class Solution {
 public:
-    int minSubArrayLen(int target, vector<int>& nums) {
-      int i = 0;
-      int j = 0;
-      int sum = 0;
-      int rslt = nums.size() + 1;
-        
-      while(j < nums.size()) {
-        sum += nums[j];
-        
-        if(sum < target) {
-          j += 1;
-        }
-        
-        else {
-          while (sum >= target) {
-            rslt = min(rslt, j - i + 1);
-            sum = sum - nums[i];
-            i += 1;
-          }
-          j += 1;
-        }
+  int minSubArrayLen(int target, vector<int> &nums) {
+    int n = nums.size();
+    // special case:
+    if (accumulate(nums.begin(), nums.end(), 0) < target)
+      return 0;
+
+    // left side of the sliding window
+    int l = 0;
+    // sum of all the elements within the window range
+    int sum = 0;
+    int ans = INT_MAX;
+    // expand the window
+    for (int r = 0; r < n; r++) {
+      sum += nums[r];
+      // if the window reached the requirement
+      while (sum >= target) {
+        // 1. update the ans
+        ans = min(ans, r - l + 1);
+        // 2. shorten the window
+        sum -= nums[l];
+        l++;
       }
-    if(rslt == nums.size() + 1) return 0;
-    else return rslt;
     }
+
+    return ans;
+  }
 };
-
-
-// ugly one
-class Solution {
-public:
-    int minSubArrayLen(int target, vector<int>& nums) {
-      int rslt = nums.size() + 1;
-      int i = 0;                          
-      int j = 0;
-      int sum = 0;
-      
-      while( i<=j && j <= nums.size() -1 ) {
-        if(i == j) { 
-          if(nums[i] >= target) {
-            return 1;
-          }
-          if (i == 0 && j == 0){
-            sum += nums[j];
-            j += 1;
-            if( j < nums.size()) {sum += nums[j];}
-            continue;
-          }
-          else {
-            sum = nums[i];
-            j += 1;
-            if (j <= nums.size() - 1) {sum += nums[j];}
-          }
-        }
-        
-        if(sum >= target) {
-          if(j-i+1 < rslt) {rslt = j - i + 1;}
-          sum -= nums[i];
-          i += 1;
-        }
-        else {
-          if (j == nums.size() -1) {
-            break;
-          }
-          else if (j < nums.size() - 1){
-            j += 1;
-            sum += nums[j];
-          }
-        }
-        
-      }
-      
-      if(rslt <= nums.size()) return rslt;
-      else return 0;
-    }
-};
-

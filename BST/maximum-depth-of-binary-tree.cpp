@@ -28,26 +28,22 @@ public:
 // 2. plain recursion
 class Solution {
 public:
-  void recurse(TreeNode *node, int &count, int &ans) {
-    // when to return
-    if (!node) {
-      // this path comes to the end
-      ans = max(ans, count);
+  void recursion(TreeNode *root, int tmp, int &ans) {
+    // when to return: already to the end of the path
+    if (!root) {
+      ans = max(ans, tmp);
       return;
     }
-    // if node exists
-    count++;
-    // record the depth of current node
-    int tmp = count;
-    recurse(node->left, count, ans);
-    count = tmp;
-    recurse(node->right, count, ans);
+
+    // this +1 is for the current level, not for root->left / root->right
+    recursion(root->left, tmp + 1, ans);
+    recursion(root->right, tmp + 1, ans);
   }
 
   int maxDepth(TreeNode *root) {
-    int count = 0;
-    int ans = 0;
-    recurse(root, count, ans);
+    int tmp = 0;
+    int ans = INT_MIN;
+    recursion(root, tmp, ans);
 
     return ans;
   }

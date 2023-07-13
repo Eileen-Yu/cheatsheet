@@ -43,3 +43,55 @@ public:
     return ans;
   }
 };
+
+// 2. BFS: indegree
+class Solution {
+public:
+  vector<int> eventualSafeNodes(vector<vector<int>> &graph) {
+    int n = graph.size();
+    // idx: to, value: [from1, from2...]
+    vector<vector<int>> indegree(n);
+    // idx: node, value: number of nodes this node can lead to
+    vector<int> degree(n, 0);
+
+    // fill up the indegree
+    for (int i = 0; i < n; i++) {
+      for (auto j : graph[i]) {
+        int from = i, to = j;
+        indegree[to].push_back(from);
+        degree[from]++;
+      }
+    }
+
+    // for BFS
+    queue<int> q;
+    // put those terminal nodes as the start ones in the BFS
+    for (int i = 0; i < n; i++) {
+      if (degree[i] == 0) {
+        q.push(i);
+      }
+    }
+
+    vector<int> ans;
+    // BFS
+    while (!q.empty()) {
+      // from
+      int cur = q.front();
+      q.pop();
+      // all nodes that the indegree can be eliminated are ans
+      ans.push_back(cur);
+
+      // check all the nodes that can lead to this node
+      for (auto neighbor : indegree[cur]) {
+        degree[neighbor]--;
+        // if all the outdegree can be eliminated, then it's not in the cycle
+        if (degree[neighbor] == 0) {
+          q.push(neighbor);
+        }
+      }
+    }
+
+    sort(ans.begin(), ans.end());
+    return ans;
+  }
+};

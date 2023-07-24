@@ -31,3 +31,46 @@ public:
     return count / pow(8, k);
   }
 };
+
+// 2. recursion + memoization to record the calculated result
+class Solution {
+public:
+  // 8 possible directions
+  vector<pair<int, int>> dir = {{1, -2}, {2, -1}, {2, 1},   {1, 2},
+                                {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}};
+  // dp[i][j][k] represents the probability of the knight remaining on the board
+  // after k steps starting from (i,j)
+  vector<vector<vector<double>>> dp;
+
+  double recursion(int i, int j, int n, int k) {
+    // memoization: if already calculated
+    if (dp[i][j][k] != 0)
+      return dp[i][j][k];
+
+    // base case: if 0 steps remains to move, the knight 100% stay on the board
+    if (k == 0)
+      return 1.0;
+
+    double prob = 0.0;
+    // try each direction
+    for (auto d : dir) {
+      int x = i + d.first;
+      int y = j + d.second;
+      // if within the valid range
+      if (x >= 0 && y >= 0 && x < n && y < n) {
+        prob += recursion(x, y, n, k - 1) / 8.0;
+      }
+    }
+
+    return dp[i][j][k] = prob;
+  }
+
+  double knightProbability(int n, int k, int row, int column) {
+    // init the dp
+    // i,j 's range: 0 ~ n-1
+    // k's range: 1 ~ k, for convenience, use 0 ~ k
+    dp = vector<vector<vector<double>>>(
+        n, vector<vector<double>>(n, vector<double>(k + 1, 0.0)));
+    return recursion(row, column, n, k);
+  }
+};

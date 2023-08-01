@@ -14,6 +14,8 @@ public:
     // range of each layer [start, n]
     for (int i = start; i <= n; i++) {
       // update current position in this recursion level
+      // in this way we can always update the correct position based on the idx
+      // calculation
       tmp[tmp.size() - k] = i;
       recursion(n, k - 1, i + 1, tmp, ans);
     }
@@ -26,6 +28,37 @@ public:
 
     // start from 1
     recursion(n, k, 1, tmp, ans);
+    return ans;
+  }
+};
+
+// 2. backtracking: pick / not pick, they are different recursion paths
+class Solution {
+public:
+  void backtracking(int n, int k, int start, vector<int> &tmp,
+                    vector<vector<int>> &ans) {
+    // when to return: already get one possible combination
+    if (tmp.size() == k) {
+      ans.push_back(tmp);
+      return;
+    }
+
+    // range of each layer [start, n]
+    for (int i = start; i <= n; i++) {
+      // 1. pick this i
+      tmp.push_back(i);
+      backtracking(n, k, i + 1, tmp, ans);
+      // 2. not pick this i
+      tmp.pop_back();
+    }
+  }
+
+  vector<vector<int>> combine(int n, int k) {
+    vector<vector<int>> ans;
+    vector<int> tmp;
+
+    // start from 1
+    backtracking(n, k, 1, tmp, ans);
     return ans;
   }
 };

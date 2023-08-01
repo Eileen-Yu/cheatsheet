@@ -1,4 +1,8 @@
 // https://leetcode.com/problems/combinations/description/
+// Time Complexity: O(k * C(n,k)): updating an element in the tmp vector, and
+// then copying the tmp vector into the ans vector once we have a valid
+// combination
+
 // 1. recursion, use k-- to control the recursion depth & update corresponding
 // idx to update the digit in each recursion level
 class Solution {

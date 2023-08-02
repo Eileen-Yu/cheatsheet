@@ -1,7 +1,8 @@
 // https://leetcode.com/problems/permutations/
 // backtracking to try each element to fill on a certain position
 
-// 1. use additional vector<bool> visited to mark
+// 1. use additional vector<bool> visited to mark, and copy the tmp each time to
+// push it to the ans
 class Solution {
 public:
   void recursion(vector<int> &nums, vector<bool> &visited, vector<int> &tmp,
@@ -38,6 +39,35 @@ public:
     vector<bool> visited(n, false);
 
     recursion(nums, visited, tmp, ans);
+
+    return ans;
+  }
+};
+
+// 2. inplace, use swap
+class Solution {
+public:
+  void recursion(vector<int> &nums, int idx, vector<vector<int>> &ans) {
+    // when to return
+    if (idx == nums.size()) {
+      ans.push_back(nums);
+      return;
+    }
+
+    for (int i = idx; i < nums.size(); i++) {
+      // inplace, try different elements as the first one
+      swap(nums[idx], nums[i]);
+      recursion(nums, idx + 1, ans);
+      // backtracking, undo this swap, instead try the next element in the next
+      // loop
+      swap(nums[i], nums[idx]);
+    }
+  }
+
+  vector<vector<int>> permute(vector<int> &nums) {
+    vector<vector<int>> ans;
+
+    recursion(nums, 0, ans);
 
     return ans;
   }

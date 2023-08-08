@@ -9,7 +9,7 @@
 // Output: 1
 //
 
-// Greedy
+// 1. simple Greedy with math tricks
 class Solution {
 public:
   int minimumMeetingRoom(vector<vector<int>> &meetings) {
@@ -43,3 +43,32 @@ public:
     return ans;
   }
 };
+
+// 2. general greedy + priority queue
+class Solution {
+public:
+  int minimumMeetingRoom(vector<vector<int>> &meetings) {
+    // sort by the starting time
+    sort(meetings.begin(), meetings.end(),
+         [](const vector<int> &a, const vector<int> &b) { return a[0] < b[0] });
+
+    // pq to store the end time from small to big
+    priority_queue<int> pq(int, vector<int>, greater<int>) pq;
+    // put the first endTime into it
+    pq.push(meetings[0][1]);
+
+    // start from the next meeting
+    for (int i = 1; i < meetings.size(); i++) {
+      // if the last meeting can end before the next meeting begin, no need a
+      // new room
+      if (meetings[i][0] > pq.top())
+        pq.pop();
+
+      // update the nearest end time
+      pq.push(meetings[i][1]);
+    }
+
+    // the size of the heap is the minimum number of rooms required
+    return pq.size();
+  }
+}

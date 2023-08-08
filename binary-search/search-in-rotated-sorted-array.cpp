@@ -1,5 +1,40 @@
 // https://leetcode.com/problems/search-in-rotated-sorted-array/description/
-// 1. find the pivot idx, then apply binary search 2 times, not exactly O(logn)
+// 1. though rotated, still can utilize the partially sorted feature to apply
+// the binary search direcly to the whole array
+class Solution {
+public:
+  int search(vector<int> &nums, int target) {
+    int l = 0, r = nums.size() - 1;
+    // binary search
+    while (l <= r) {
+      int mid = l + (r - l) / 2;
+
+      // if we find the target, directly return
+      if (nums[mid] == target)
+        return mid;
+
+      // if [l, mid] is ascending
+      if (nums[l] <= nums[mid]) {
+        // if target is within the [l, mid) range, means we can reduce the trial
+        if (nums[l] <= target && target < nums[mid])
+          r = mid - 1;
+        // else, we need to increase the trial
+        else
+          l = mid + 1;
+      } else { // if mid is not within the ordered range
+        // if the target is within (mid, r] means we can increase the trial
+        if (nums[mid] < target && target <= nums[r])
+          l = mid + 1;
+        else
+          r = mid - 1;
+      }
+    }
+
+    return -1;
+  }
+};
+
+// 2. find the pivot idx, then apply binary search 2 times, not exactly O(logn)
 class Solution {
 public:
   int binarySearch(int l, int r, int target, vector<int> &nums) {

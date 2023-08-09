@@ -42,3 +42,36 @@ public:
     return ans;
   }
 };
+
+// 2. dp + memoization(recursion), would MLE
+class Solution {
+public:
+  int recursion(vector<int> &nums, int p, int i, vector<vector<int>> &dp) {
+    // when to return
+    // 1. if already found enough pairs
+    if (p == 0)
+      return 0;
+    // 2. if i is out of range, since we need nums[i+1], so i <= n-1
+    // return 1e9 to ensure it won't be selected in the final result
+    if (i >= nums.size() - 1)
+      return 1e9;
+
+    // memoization
+    if (dp[i][p] != -1)
+      return dp[i][p];
+
+    // 1. pick nums[i] and numd[i+1], continue to check on nums[i+2]...
+    // 2. don't pick nums[i], continue to check oon nums[i+1]...
+    return dp[i][p] = min(
+               max(nums[i + 1] - nums[i], recursion(nums, p - 1, i + 2, dp)),
+               recursion(nums, p, i + 1, dp));
+  }
+
+  int minimizeMax(vector<int> &nums, int p) {
+    sort(nums.begin(), nums.end());
+    int n = nums.size();
+    // dp[i][p] represents the minimum when the idx is i and we found p pairs
+    vector<vector<int>> dp(n, vector<int>(p + 1, -1));
+    return recursion(nums, p, 0, dp);
+  }
+};

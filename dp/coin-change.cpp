@@ -1,4 +1,28 @@
 // https://leetcode.com/problems/coin-change/
+// 1. dp, tabulation
+class Solution {
+public:
+  int coinChange(vector<int> &coins, int amount) {
+    // dp[i] represents the minimum number of coins to make up the amount i
+    // init to an impossible ans: amount + 1
+    vector<int> dp(amount + 1, amount + 1);
+    // base case
+    dp[0] = 0;
+
+    // if we pick this coin
+    for (auto coin : coins) {
+      // only can make up the amount  >= coin
+      for (int i = coin; i <= amount; i++) {
+        // only when i - coin has been filled up
+        if (dp[i - coin] != amount + 1)
+          dp[i] = min(dp[i], 1 + dp[i - coin]);
+      }
+    }
+
+    return dp[amount] == amount + 1 ? -1 : dp[amount];
+  }
+};
+
 // 2. backtracking, TLE in some cases
 class Solution {
 public:

@@ -4,8 +4,8 @@ class Solution {
 public:
   int coinChange(vector<int> &coins, int amount) {
     // dp[i] represents the minimum number of coins to make up the amount i
-    // init to an impossible ans: amount + 1
-    vector<int> dp(amount + 1, amount + 1);
+    // init to an impossible ans: INT_MAX
+    vector<int> dp(amount + 1, INT_MAX);
     // base case
     dp[0] = 0;
 
@@ -14,12 +14,12 @@ public:
       // only can make up the amount  >= coin
       for (int i = coin; i <= amount; i++) {
         // only when i - coin has been filled up
-        if (dp[i - coin] != amount + 1)
+        if (dp[i - coin] != INT_MAX)
           dp[i] = min(dp[i], 1 + dp[i - coin]);
       }
     }
 
-    return dp[amount] == amount + 1 ? -1 : dp[amount];
+    return dp[amount] == INT_MAX ? -1 : dp[amount];
   }
 };
 

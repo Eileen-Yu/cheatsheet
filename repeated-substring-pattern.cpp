@@ -1,4 +1,24 @@
 // https://leetcode.com/problems/repeated-substring-pattern/description/
+// 1. clever way to check if a string is composed by repeated substrings:
+// if a string s can be constructed by repeating a substring, then concatenating
+// two copies of s together and removing the first and last character would
+// still contain s as a substring.
+// (this would check the body + head)
+class Solution {
+public:
+  bool repeatedSubstringPattern(string s) {
+    // concatenate 2 original s to make up a new string
+    string newStr = s + s;
+
+    // remove the first & last char of the new string
+    string toFind = newStr.substr(1, newStr.length() - 2);
+
+    // if we still can find the original string in the updated toFind, return
+    // true
+    return toFind.find(s) != string::npos;
+  }
+};
+
 // 2. plain version: try various patterns, make up a new string to compare with
 // the original one
 class Solution {

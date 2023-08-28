@@ -4,6 +4,7 @@
 // https://leetcode.com/problems/non-overlapping-intervals/description/
 // *how to sort the original array is important in this greedy
 
+// 1. recommend: greedy
 class Solution {
 public:
   int findLongestChain(vector<vector<int>> &pairs) {
@@ -34,6 +35,54 @@ public:
       }
       // otherwise, we skip this pair, continue to check the next
     }
+
+    return ans;
+  }
+};
+
+// 2. use back-tracking(recursion), but would TLE, need optimization(such as
+// memoization)
+class Solution {
+public:
+  // the first pair must be one
+  int ans = 1;
+
+  void recursion(vector<vector<int>> &pairs, int idx, int end, int tmp) {
+    int n = pairs.size();
+    // when to return
+    if (idx >= n) {
+      // update the ans
+      ans = max(ans, tmp);
+      return;
+    }
+
+    // 1. if the current pair can extend the chain
+    if (pairs[idx][0] > end) {
+      // update the end & tmp length
+      recursion(pairs, idx + 1, pairs[idx][1], tmp + 1);
+    }
+
+    // 2. else if there is overlaping
+    else {
+      // 2.1 if take this pair as the new start,
+      // update length(tmp) to 1
+      recursion(pairs, idx + 1, pairs[idx][1], 1);
+      //
+      // 2.2 if not take this pair, the end & tmp remains
+      recursion(pairs, idx + 1, end, tmp);
+    }
+  }
+
+  int findLongestChain(vector<vector<int>> &pairs) {
+    // sort all the pairs by the start from small to big
+    sort(
+        pairs.begin(), pairs.end(),
+        [](const vector<int> &a, const vector<int> &b) { return a[1] < b[1]; });
+    // record the last ending, start from pairs[0][1];
+    int end = pairs[0][1];
+
+    // start from the second one
+    recursion(pairs, 1, end, 1);
 
     return ans;
   }

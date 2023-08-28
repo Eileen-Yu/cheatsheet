@@ -1,7 +1,42 @@
 // https://leetcode.com/problems/implement-stack-using-queues/description/
 // use queue to mock stack
 
-// 1. use 2 queues
+// 1. use 1 queue, rotate the elements in the queue upon each push
+class MyStack {
+public:
+  // mock the stack
+  queue<int> q;
+
+  MyStack() {
+    // init the queue
+    q = queue<int>();
+  }
+
+  void push(int x) {
+    // 1. push the new element into the queue
+    q.push(x);
+
+    // 2. rotate the other elements except the new element
+    // so after this, the front would be the latest pushed element
+    for (int i = 0; i < q.size() - 1; i++) {
+      // each time put the first element to the end of the queue
+      q.push(q.front());
+      q.pop();
+    }
+  }
+
+  int pop() {
+    int ans = q.front();
+    q.pop();
+    return ans;
+  }
+
+  int top() { return q.front(); }
+
+  bool empty() { return q.empty(); }
+};
+
+// 2. use 2 queues
 class MyStack {
 public:
   // init 2 queues

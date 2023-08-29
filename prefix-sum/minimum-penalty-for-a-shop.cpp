@@ -44,7 +44,41 @@ public:
   }
 };
 
-// 2. plain version, O(n^2), would TLE
+// 2. single pass, scoring system
+// translate the problem tp --> try to welcome at most customers as
+// possible
+class Solution {
+public:
+  int bestClosingTime(string customers) {
+    // represents the max of more customers have shown up than not
+    // cannot use INT_MIN, because 0 is the baseline, if maxScore < 0, means
+    // 'NNN...N', should close the shop at 0-th hour
+    int maxScore = 0;
+    // represents the net number of customers until that point.
+    int score = 0;
+    // special case: "NNNN", return -1 + 1 = 0
+    int ans = -1;
+
+    // loop each customer
+    for (int i = 0; i < customers.size(); i++) {
+      // if 'Y', this means shop closed but there is customer, score += 1;
+      // else if 'N', this means shop closed and no customer, score -= 1;
+      score += customers[i] == 'Y' ? 1 : -1;
+
+      // --> ans = choosing the point where the maximum number of customers have
+      // already visited
+      if (score > maxScore) {
+        maxScore = score;
+        ans = i;
+      }
+    }
+
+    // would actually choose to close the shop after i, so i+1
+    return ans + 1;
+  }
+};
+
+// 3. plain version, O(n^2), would TLE
 class Solution {
 public:
   int bestClosingTime(string customers) {

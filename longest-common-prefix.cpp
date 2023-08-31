@@ -21,3 +21,30 @@ public:
     return ans;
   }
 };
+
+// 2. sort first, then only need to compare first & last strings
+class Solution {
+public:
+  string longestCommonPrefix(vector<string> &strs) {
+    // sort, so we only need to compare the first & last strings
+    sort(strs.begin(), strs.end());
+    int n = strs.size();
+    string first = strs[0];
+    string last = strs[n - 1];
+
+    string ans = "";
+
+    // loop each char
+    for (int i = 0; i < min(first.length(), last.length()); i++) {
+      // once the prefix are not the same
+      if (first[i] != last[i]) {
+        return ans;
+      }
+
+      // else, append this char to the ans
+      ans += first[i];
+    }
+
+    return ans;
+  }
+};

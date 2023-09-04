@@ -2,6 +2,7 @@
 // bit manipulation trick: n & (n-1)
 // 1. always eliminate the least significant 1
 // 2. this can help to check if n is 2^n (if == 0)
+
 class Solution {
 public:
   vector<int> countBits(int n) {

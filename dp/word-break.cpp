@@ -1,41 +1,39 @@
 // https://leetcode.com/problems/word-break/
-// 1. plain recursion: would TLE in some cases
+// 1. tabulation: record if s[:i] is valid
+// this is very similar to
+// https://leetcode.com/problems/extra-characters-in-a-string/
 class Solution {
 public:
-  bool flag = false;
-
-  void recursion(string s, map<string, int> &mp) {
-    // when to return
-    // if there is one possible segmentation
-    if (flag == true)
-      return;
-    // if all words successfully be segmented
-    if (s.empty()) {
-      flag = true;
-      return;
-    }
-
-    for (int i = 0; i < s.length(); i++) {
-      string subString = s.substr(0, i + 1);
-      // if this subword is in the dictionary
-      if (mp.find(subString) != mp.end()) {
-        recursion(s.substr(i + 1), mp);
-      }
-      // if not, the loop would automatically try the next subword
-    }
-  }
-
   bool wordBreak(string s, vector<string> &wordDict) {
     int n = s.length();
-    // for easier word search
-    map<string, int> mp;
-    for (auto i : wordDict) {
-      mp[i]++;
+    // dp[i] represents if s[:i] is valid
+    vector<bool> dp(n, false);
+    // base case
+    dp[0] = true;
+
+    // for easier search if a substring is in the dict
+    unordered_map<string, int> mp;
+    for (auto word : wordDict) {
+      mp[word]++;
     }
 
-    recursion(s, mp);
+    // try to split the original s by various length
+    for (int i = 1; i <= n; i++) {
+      // try to use this new char to make up various substrings by various
+      // length
+      for (int l = 1; l <= i; l++) {
+        string subStr = s.substr(i - l, l);
+        // if the substring can be found in the dict && the previous substrings
+        // are valid
+        if (mp.find(subStr) != mp.end() && dp[i - l] == true) {
+          dp[i] = true;
+          // can move to the next i
+          break;
+        }
+      }
+    }
 
-    return flag;
+    return dp[n];
   }
 };
 
@@ -77,5 +75,45 @@ public:
     map<string, bool> dp;
 
     return recursion(s, mp, dp);
+  }
+};
+
+// 3. plain recursion: would TLE in some cases
+class Solution {
+public:
+  bool flag = false;
+
+  void recursion(string s, map<string, int> &mp) {
+    // when to return
+    // if there is one possible segmentation
+    if (flag == true)
+      return;
+    // if all words successfully be segmented
+    if (s.empty()) {
+      flag = true;
+      return;
+    }
+
+    for (int i = 0; i < s.length(); i++) {
+      string subString = s.substr(0, i + 1);
+      // if this subword is in the dictionary
+      if (mp.find(subString) != mp.end()) {
+        recursion(s.substr(i + 1), mp);
+      }
+      // if not, the loop would automatically try the next subword
+    }
+  }
+
+  bool wordBreak(string s, vector<string> &wordDict) {
+    int n = s.length();
+    // for easier word search
+    map<string, int> mp;
+    for (auto i : wordDict) {
+      mp[i]++;
+    }
+
+    recursion(s, mp);
+
+    return flag;
   }
 };

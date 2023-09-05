@@ -16,10 +16,10 @@ public:
 
     // idx to loop the original linked list
     Node *tmp = head;
-    // new head of the copied linked list
-    Node *newHead = nullptr;
+    // dummy trick
+    Node *dummy = new Node(-10001);
     // record the last copied node
-    Node *last = nullptr;
+    Node *last = dummy;
 
     // 1. the first loop to build the ->next link
     // loop the original linked list
@@ -30,11 +30,8 @@ public:
       // add it to the map
       mp[tmp] = newNode;
 
-      // connect it to the last copied node / it's the newHead
-      if (!newHead)
-        newHead = newNode;
-      else
-        last->next = newNode;
+      // connect this copied node with the last copied node
+      last->next = newNode;
 
       // update this node as the last node, for the next loop
       last = newNode;
@@ -45,8 +42,10 @@ public:
 
     // 2. the second loop to build the ->random link
     // loop the copied linked list & original linked list at the meantime
+    // idx to loop the original link
     tmp = head;
-    Node *copy = newHead;
+    // idx to loop the copied link
+    Node *copy = dummy->next;
 
     while (tmp) {
       // if the original->random is not nullptr
@@ -62,10 +61,9 @@ public:
       copy = copy->next;
     }
 
-    return newHead;
+    return dummy->next;
   }
 };
-
 // 2. 1 loop, create next & random nodes at the same time,
 // but need to check if a certain node has been copied by utilizing the map each
 // time

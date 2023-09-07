@@ -56,3 +56,33 @@ public:
     return dummy->next;
   }
 };
+
+// 2. inplace reverse parts of the nodes in a linked list
+class Solution {
+public:
+  ListNode *reverseBetween(ListNode *head, int left, int right) {
+    ListNode *dummy = new ListNode();
+    dummy->next = head;
+    ListNode *prev = dummy;
+
+    // move prev to left - 1
+    for (int i = 0; i < left - 1; i++) {
+      prev = prev->next;
+    }
+
+    // start from left
+    ListNode *cur = prev->next;
+
+    // trick to reverse the nodes in [left, right] in a linked list, inplace
+    for (int i = 0; i < right - left; i++) {
+      // record the original next node
+      ListNode *nextNode = cur->next;
+      cur->next = nextNode->next;
+      nextNode->next = prev->next;
+      prev->next = nextNode;
+    }
+
+    // use dummy to avoid lose the new head (in case left = 1)
+    return dummy->next;
+  }
+};

@@ -1,85 +1,65 @@
 // https://leetcode.com/problems/min-cost-to-connect-all-points/
 
-
-// priority_queue  O(n^2logn)
+// 1. Prim's algorithm to find the Minimum Spanning Tree(min cost to connect all
+// nodes) priority_queue  O(n^2logn) + cache to store the min cost to each node
+// + if visited(connected) or not
 class Solution {
 public:
-    int minCostConnectPoints(vector<vector<int>>& points) {
-      //pair<distance,ith node>
-      priority_queue< pair<int,int>, vector< pair<int,int> >, greater< pair<int,int>>> pq;
-      int n = points.size();
-      vector<int> visited(n,false);
-      pq.push({0,0});
-      int ans = 0;
-      
-      
-      for(int i = 1; i < n; i++){
-        pair<int,int> temp = pq.top();
-        //pq.pop();
-        visited[temp.second] = true;
-        
-        for(int i = 0; i < n; i++){
-          pq.push({abs(points[temp.second][0]-points[i][0]) + abs(points[temp.second][1]-points[i][1]),i});
+  // calculate the manhattan distance between 2 nodes
+  int getDist(vector<int> p1, vector<int> p2) {
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1]);
+  }
+
+  int minCostConnectPoints(vector<vector<int>> &points) {
+    // number of nodes
+    int n = points.size();
+
+    // {cost to reach the node, node}, sort by cost from small to big
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+    // init with the start node, the cost to reach the start node is 0
+    pq.push({0, 0});
+
+    // cache to store the minimum cost to each node
+    // idx: node, value: min cost
+    vector<int> minCost(n, INT_MAX);
+
+    // record if a node has already been connected
+    vector<bool> visited(n, false);
+
+    int ans = 0;
+
+    // Prim's algorithm: find a minimum spanning tree (MST) for a weighted,
+    // undirected graph Starting from an arbitrary vertex, selects the edge with
+    // the smallest weight at each step and adds it to the MST
+    while (!pq.empty()) {
+      // get the next with the smallest cost
+      auto [cost, node] = pq.top();
+      pq.pop();
+
+      // if the node already been connected
+      if (visited[node])
+        continue;
+
+      // else, connect this node
+      visited[node] = true;
+      ans += cost;
+
+      // calculate the dist between this node and the other unconnected nodes
+      for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+          int dist = getDist(points[node], points[i]);
+          // if the dist to this unconnected node is smaller than the cached
+          // dist,
+          if (dist < minCost[i]) {
+            // 1. update the minCost
+            minCost[i] = dist;
+            // 2. push it to pq
+            pq.push({dist, i});
+          }
         }
-        
-        while(visited[pq.top().second]){
-          pq.pop();
-        }
-        ans += pq.top().first;
       }
-      
-      return ans;
     }
-};
 
-
-
-
-
-
-// simplest version of Prim that finds the mininal element by a loop
-class Solution {
-public:
-    int manhattan(int x, int y, int xi, int yi){
-      return abs(x-xi)+abs(y-yi);
-    }
-    
-  
-    int minCostConnectPoints(vector<vector<int>>& points) {
-      int n = points.size();
-      vector<int> visited(n,false);
-      vector<int> cost(n,INT_MAX);
-      int ans = 0;
-      
-      auto updateCost = [&](int x, int y){    // for func in func
-        for(int i = 0; i < n; i++){  
-          if (visited[i] == true) continue; // prevent loop
-          int xi = points[i][0];
-          int yi = points[i][1];
-          cost[i] = min(cost[i],manhattan(x,y,xi,yi));
-        }
-      };
-      
-      //start from point 0
-      visited[0] = true;
-      cost[0] = 0;
-      updateCost(points[0][0],points[0][1]);
-     
-      // Prim's 
-      for(int i = 1; i < n; i++){   // n-1 edges
-        int j = -1; // not start yet
-        
-        for(int k = 0; k < n; k++){ 
-          if(visited[k] == true) continue;
-          if(j == -1 || cost[j] > cost[k])
-            j = k; // j is the nearest
-        }
-        
-        ans += cost[j];
-        visited[j] = true; // won't traverse again
-        updateCost(points[j][0],points[j][1]);   // j is the next starting
-      }
-       
-      return ans;
-    }
+    return ans;
+  }
 };

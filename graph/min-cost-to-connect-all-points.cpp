@@ -1,7 +1,19 @@
 // https://leetcode.com/problems/min-cost-to-connect-all-points/
 
-// 1. Prim's algorithm to find the Minimum Spanning Tree(min cost to connect all
-// nodes) priority_queue  O(n^2logn) + cache to store the min cost to each node
+// 1. Prim's algorithm to find the Minimum Spanning Tree
+// (min cost to connect all nodes)
+
+// step:
+// 1. push start node into pq
+// 2. select the unvisited node with the min cost from pq
+// 3. if it's not visited:
+//    3.1 mark it as visited, and add the cost to ans
+//    3.2 calculate the cost between this node and other unvisited nodes
+//    3.3 update the cache(record the min cost to a certain node) if necessary
+//    3.4 push the new cost to the pq if necessary
+// 4. repeat 2 ~ 3 until all nodes are visited
+
+// priority_queue  O(n^2logn) + cache to store the min cost to each node
 // + if visited(connected) or not
 class Solution {
 public:

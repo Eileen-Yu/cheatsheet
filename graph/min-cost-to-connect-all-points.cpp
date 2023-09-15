@@ -75,3 +75,81 @@ public:
     return ans;
   }
 };
+
+// 2. Kruskal's Algorithm: Union-Find
+// finding the MST in a graph(connect all nodes with the minimum cost)
+// also used for:
+// checking if 2 nodes in different sets,
+// no cycle is formed when a new edge is added...
+//
+// Need 2 helper functions:
+// 1. find (find root of a certain node)
+// 2. unionSets (merge 2 sets into 1 by defining x's root = y)
+class Solution {
+private:
+  // 2 helper functions of Union-Find
+  // 1. find the root(parent) node of node x
+  int find(vector<int> &parent, int x) {
+    if (parent[x] == x)
+      return x;
+    // else
+    parent[x] = find(parent, parent[x]);
+    return parent[x];
+  }
+
+  // 2. merge 2 sets by setting x's root as y's child
+  void unionSets(vector<int> &parent, int x, int y) {
+    parent[find(parent, x)] = find(parent, y);
+  }
+
+public:
+  int minCostConnectPoints(vector<vector<int>> &points) {
+    int n = points.size();
+
+    // parent[i] records the root node of node i
+    vector<int> parent(n);
+    // init the parent, make each node's parent as itself
+    for (int i = 0; i < points.size(); i++) {
+      parent[i] = i;
+    }
+
+    // {cost between x and y, {node x, node y}}
+    vector<pair<int, pair<int, int>>> edges;
+    // fill in the edges
+    for (int i = 0; i < n; i++) {
+      for (int j = i + 1; j < n; j++) {
+        // manhattan dist
+        int cost =
+            abs(points[i][0] - points[j][0]) + abs(points[i][1] - points[j][1]);
+        edges.push_back({cost, {i, j}});
+      }
+    }
+
+    // sort the cost from small to big
+    sort(edges.begin(), edges.end());
+
+    int ans = 0;
+    // count the number of connected edges, should be n - 1
+    int count = 0;
+
+    for (auto i : edges) {
+      int cost = i.first;
+      int x = i.second.first;
+      int y = i.second.second;
+
+      // if x and y are not connected = they don't share the same root
+      if (find(parent, x) != find(parent, y)) {
+        // connect x and y = let them share the same root
+        unionSets(parent, x, y);
+        ans += cost;
+        count++;
+      }
+
+      // if already have all nodes connected
+      if (count == n - 1)
+        break;
+    }
+
+    return ans;
+  }
+};

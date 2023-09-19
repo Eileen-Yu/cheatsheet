@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/find-the-duplicate-number/description/
-// This problem can also be solved by binary search & bit
+// This problem can also be solved by binary search & linked list & bit
 // 1. most direct way: use map
 class Solution {
 public:

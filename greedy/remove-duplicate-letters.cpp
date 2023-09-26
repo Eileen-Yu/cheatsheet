@@ -49,3 +49,57 @@ public:
     return ans;
   }
 };
+
+// 2. use stack to track the last char in the tmp ans
+// the idea is similar to the above: track the ans, each time compare with the
+// last char in the tmp ans, drop it if there's more later
+class Solution {
+public:
+  string removeDuplicateLetters(string s) {
+    int n = s.length();
+    // record the idx when each char last occured in the string
+    // {char, idx}
+    unordered_map<char, int> lastOccur;
+    // fill in the map
+    for (int i = 0; i < n; i++) {
+      lastOccur[s[i]] = i;
+    }
+
+    // record if a certain char has been added to the ans
+    unordered_set<char> visited;
+    // keep track of the final ans
+    stack<char> st;
+
+    for (int i = 0; i < n; i++) {
+      // current char
+      char cur = s[i];
+      // if this char already been added into the ans, skip
+      if (visited.find(cur) != visited.end())
+        continue;
+
+      // else, need to add it to the ans in the correct position
+      // 1. drop previous chars if necessary
+      while (!st.empty() && cur < st.top() && lastOccur[st.top()] > i) {
+        // mark it as unused, so as to add it later in the loop
+        visited.erase(st.top());
+        // remove it from the ans
+        st.pop();
+      }
+
+      // 2. add this char to the ans
+      st.push(cur);
+      // mark it as used in the ans
+      visited.insert(cur);
+    }
+
+    // generate the ans in the correct order (the order in the stack is
+    // reversed)
+    string ans = "";
+    while (!st.empty()) {
+      ans = st.top() + ans;
+      st.pop();
+    }
+
+    return ans;
+  }
+};

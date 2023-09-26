@@ -40,3 +40,19 @@ public:
     return char(sumT - sumS);
   }
 };
+
+// --> a optimized way: we don't neet to loop twice
+// each time just add the diff to a later postion
+class Solution {
+public:
+  char findTheDifference(string s, string t) {
+    // loop all diff chars in the two strings
+    for (int i = 0; i < s.length(); i++) {
+      // each time add the diff to a later char in string t
+      t[i + 1] += t[i] - s[i];
+    }
+
+    // the final diff is the ASCII of the extra char
+    return char(t[t.length() - 1]);
+  }
+};

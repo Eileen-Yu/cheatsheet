@@ -1,5 +1,52 @@
 // https://leetcode.com/problems/decoded-string-at-index/
-// 1. try to generate the string, most direct but MLE
+// 1. use math to decode the final string with repetition reversely
+// e.g: string: prob3slov4 --> (3*4 + 4) * 4, k = 31, totalLength = 64
+// first read 4, so 64 / 4 = 16, k = 31 % 16 = 15 --> o is the ans
+class Solution {
+public:
+  string decodeAtIndex(string s, int k) {
+    // length of the string to be decoded
+    long long len = 0;
+    // calculate the final length of the string with the repeatition
+    for (auto i : s) {
+      if (isalpha(i))
+        len += 1;
+      else
+        len *= i - '0';
+    }
+
+    // try to decode the final string from the end to the biginning
+    // e.g: (3*4 + 4)*4, we'll first decode the final *4
+    for (int i = s.length() - 1; i >= 0; i--) {
+      // if i is digit
+      if (isdigit(s[i])) {
+        // decode the repeatition
+        len /= s[i] - '0';
+        // also means, string[i] and string[i+len] is the same char
+        // so decode the k to find it in the decoded(shortened) string
+        k = k % len;
+      }
+
+      // else if i is letter
+      else if (isalpha(s[i])) {
+        // since 1-indexed, so k == 0 means the char we are seeking is the end
+        // of the decoded string OR len == k means the idx we're at now is
+        // exactly the one we are seeking
+        if (k == 0 || len == k)
+          return string(1, s[i]);
+
+        // else, try to compare the previous char
+        // len represents the idx we're at now(1-indexed)
+        len--;
+      }
+    }
+
+    // should never reach this line
+    return "";
+  }
+};
+
+// 2. try to generate the string, most direct but MLE
 class Solution {
 public:
   string decodeAtIndex(string s, int k) {

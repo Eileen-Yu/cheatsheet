@@ -46,7 +46,48 @@ public:
   }
 };
 
-// 2. try to generate the string, most direct but MLE
+// 2. same idea with 1, just use stack to eliminate the devision when we meet a
+// digit
+class Solution {
+public:
+  string decodeAtIndex(string s, int k) {
+    // record the length of the full string when we read at each specific char
+    // in the encoded string s
+    stack<long long> st;
+    // base, for easier push later
+    st.push(0);
+
+    // fill in the stack
+    for (auto i : s) {
+      if (isalpha(i))
+        st.push(st.top() + 1);
+
+      else
+        st.push(st.top() * (i - '0'));
+    }
+
+    // traverse reversely
+    // total # of elements in the stack
+    int sz = st.size();
+    while (!st.empty()) {
+      k %= st.top();
+      sz--;
+
+      // if this char is the one we are seeking
+      // idx is 1-indexed, so s[sz-1]
+      if (k == 0 && isalpha(s[sz - 1]))
+        return string(1, s[sz - 1]);
+
+      // else, try the next one
+      st.pop();
+    }
+
+    // should never reach this line
+    return "";
+  }
+};
+
+// 3. try to generate the string, most direct but MLE
 class Solution {
 public:
   string decodeAtIndex(string s, int k) {

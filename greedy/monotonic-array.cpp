@@ -34,3 +34,30 @@ public:
     return true;
   }
 };
+
+// 2. use 2 vars to record the status, like greedy
+// similar to
+// https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/description/
+class Solution {
+public:
+  bool isMonotonic(vector<int> &nums) {
+    // once we meet increase / decrease in the array, mark them as false
+    bool increase = false;
+    bool decrease = false;
+
+    for (int i = 1; i < nums.size(); i++) {
+      // if increase
+      if (nums[i] > nums[i - 1])
+        increase = true;
+      // if decrease
+      else if (nums[i] < nums[i - 1])
+        decrease = true;
+
+      // once there is both increase & decrease status in the array
+      if (increase && decrease)
+        return false;
+    }
+
+    return true;
+  }
+};

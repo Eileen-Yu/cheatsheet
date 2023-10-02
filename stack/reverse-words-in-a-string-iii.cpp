@@ -52,3 +52,23 @@ public:
     return ans;
   }
 };
+
+// 2. use string stream to help seperate the words from a sentence
+class Solution {
+public:
+  string reverseWords(string s) {
+    // create a string stream of the original string s
+    stringstream ss(s);
+    string tmp, ans;
+
+    // for each word in the stream
+    while (ss >> tmp) {
+      reverse(tmp.begin(), tmp.end());
+      // still needs to seperate the words by space
+      ans += tmp + ' ';
+    }
+
+    // drop the space at the end
+    return ans.substr(0, ans.length() - 1);
+  }
+};

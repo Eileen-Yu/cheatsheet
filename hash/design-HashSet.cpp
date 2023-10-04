@@ -1,5 +1,7 @@
 // https://leetcode.com/problems/design-hashset/
-//
+// this is very similar to
+// https://leetcode.com/problems/design-hashmap/description
+
 // 1. use vector to implement hash table
 class MyHashSet {
 public:
@@ -19,21 +21,13 @@ public:
 // 2. use set (seems a built-in hash table)
 class MyHashSet {
 public:
-    unordered_set<int> st;
+  unordered_set<int> st;
 
-    MyHashSet() {
-      st = unordered_set<int>();
-    }
-    
-    void add(int key) {
-      st.insert(key);
-    }
-    
-    void remove(int key) {
-      st.erase(key);
-    }
-    
-    bool contains(int key) {
-      return st.find(key) == st.end() ? false : true;
-    }
+  MyHashSet() { st = unordered_set<int>(); }
+
+  void add(int key) { st.insert(key); }
+
+  void remove(int key) { st.erase(key); }
+
+  bool contains(int key) { return st.find(key) == st.end() ? false : true; }
 };

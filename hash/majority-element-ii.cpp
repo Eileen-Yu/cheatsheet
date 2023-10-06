@@ -61,3 +61,58 @@ public:
     return ans;
   }
 };
+
+// 3. find majority element --> Moore Voting Algo
+// > n / 3 --> at most 2 majority elements
+class Solution {
+public:
+  vector<int> majorityElement(vector<int> &nums) {
+    // since the majority is > n/3, means we would at most have 2 majority
+    // elements
+    int candidate1 = 0, candidate2 = 0;
+    int count1 = 0, count2 = 0;
+
+    // first loop to find the possible 2 majority elements
+    for (auto i : nums) {
+      // first, check if this elements can match with 2 candidates
+      if (i == candidate1)
+        count1++;
+      else if (i == candidate2)
+        count2++;
+      // then, check if it can be a new candidate
+      else if (count1 == 0) {
+        candidate1 = i;
+        count1++;
+      } else if (count2 == 0) {
+        candidate2 = i;
+        count2++;
+      }
+      // else if this element doesn't match either candidate and neither count
+      // is zero
+      else {
+        count1--;
+        count2--;
+      }
+    }
+
+    // now we have the 2 possible candidates, we need to have the exact count of
+    // them
+    count1 = 0, count2 = 0;
+
+    for (auto i : nums) {
+      if (i == candidate1)
+        count1++;
+      else if (i == candidate2)
+        count2++;
+    }
+
+    vector<int> ans;
+    int n = nums.size();
+    if (count1 > n / 3)
+      ans.push_back(candidate1);
+    if (count2 > n / 3)
+      ans.push_back(candidate2);
+
+    return ans;
+  }
+};

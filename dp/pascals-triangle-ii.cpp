@@ -1,5 +1,31 @@
 // https://leetcode.com/problems/pascals-triangle-ii/description/
-// 1. record the whole triangle
+// 1. there are maths relationship between the consecutive elements in the same
+// row we can direcly calculate the target row without recording the whole
+// triangle
+class Solution {
+public:
+  vector<int> getRow(int rowIndex) {
+    // the ans row
+    vector<int> ans;
+    // the first element must be 1
+    ans.push_back(1);
+    long long prev = 1;
+
+    // calculate the other elements in the ans row
+    // the k-th element in this row(0-based)
+    for (int k = 1; k <= rowIndex; k++) {
+      // This formula is derived from the relationship between consecutive
+      // binomial coefficients in the same row
+      long long next = prev * (rowIndex - k + 1) / k;
+      ans.push_back(next);
+      prev = next;
+    }
+
+    return ans;
+  }
+};
+
+// 2. record the whole triangle
 // as each row is not the same length, need to fill in row by row
 // key formula: row[i] = prevRow[i-1] + prevRow[i]
 class Solution {

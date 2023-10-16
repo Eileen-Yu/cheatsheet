@@ -1,5 +1,41 @@
 // https://leetcode.com/problems/permutations-ii
-//  1. use set to avoid duplication
+// 1. use swap + copy to avoid duplication
+class Solution {
+public:
+  void recursion(vector<int> nums, int idx, vector<vector<int>> &ans) {
+    // when to return
+    if (idx == nums.size()) {
+      ans.push_back(nums);
+      return;
+    }
+
+    // try to swap with itself / other elements with different value
+    // here we don't use reference, but directly make a copy of nums
+    // so it wouldn't affect other branches
+    for (int i = idx; i < nums.size(); i++) {
+      // skip the duplication
+      if (i != idx && nums[i] == nums[idx])
+        continue;
+
+      // else
+      swap(nums[i], nums[idx]);
+      recursion(nums, idx + 1, ans);
+      // don't neet to undo the swap, as it's a copy
+    }
+  }
+
+  vector<vector<int>> permuteUnique(vector<int> &nums) {
+    // need to sort first to make duplications near each other
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> ans;
+
+    recursion(nums, 0, ans);
+
+    return ans;
+  }
+};
+
+//  2. use set to avoid duplication
 //  need to convert set to vector at the end
 class Solution {
 public:

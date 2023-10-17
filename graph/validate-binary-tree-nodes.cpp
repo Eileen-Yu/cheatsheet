@@ -4,6 +4,68 @@
 // 2. find the only root (no root / >=1 root are invalid)
 // 3. check cycles in the tree (no node can be visited twice)
 // 4. check completeness (no isolated node)
+
+// 1. find root + count connected nodes(DFS)
+class Solution {
+public:
+  // count the number of connected nodes from the root
+  int dfs(int idx, vector<int> &leftChild, vector<int> &rightChild) {
+    // when to return: the current node doesn't exist
+    if (idx == -1)
+      return 0;
+
+    // continue to count left & right children
+    return 1 + dfs(leftChild[idx], leftChild, rightChild) +
+           dfs(rightChild[idx], leftChild, rightChild);
+  }
+
+  bool validateBinaryTreeNodes(int n, vector<int> &leftChild,
+                               vector<int> &rightChild) {
+    // record the parent of each node
+    vector<int> parent(n, -1);
+
+    // loop each node
+    for (int i = 0; i < n; i++) {
+      if (leftChild[i] != -1) {
+        // the leftchild have more than 1 parent
+        if (parent[leftChild[i]] != -1)
+          return false;
+        else
+          parent[leftChild[i]] = i;
+      }
+
+      if (rightChild[i] != -1) {
+        // the rightchild have more than 1 parent
+        if (parent[rightChild[i]] != -1)
+          return false;
+        else
+          parent[rightChild[i]] = i;
+      }
+    }
+
+    int root = -1;
+    // find the root: the only node without the parent
+    for (int i = 0; i < n; i++) {
+      if (parent[i] == -1) {
+        // if there are more than 1 root
+        if (root != -1)
+          return false;
+
+        else
+          root = i;
+      }
+    }
+
+    // no root
+    if (root == -1)
+      return false;
+
+    // check if all nodes are connected
+    return dfs(root, leftChild, rightChild) == n;
+  }
+};
+
+// 2. find root + visited(DFS) to detect cycle & isolated node
 class Solution {
 public:
   bool dfs(int idx, vector<bool> &visited, int n, vector<int> &leftChild,

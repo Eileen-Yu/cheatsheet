@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/flatten-nested-list-iterator/
-
+// 1. use stack to flatten the nestedList on the fly
 /**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
@@ -21,33 +21,43 @@
  */
 
 class NestedIterator {
-private:
-  stack<NestedInteger *> s;
-
 public:
+  stack<NestedInteger> st;
+
   NestedIterator(vector<NestedInteger> &nestedList) {
-    for (int i = nestedList.size() - 1; i >= 0; i--)
-      s.push(&nestedList[i]);
+    // push all nestedList items in reverse order
+    for (int i = nestedList.size() - 1; i >= 0; i--) {
+      st.push(nestedList[i]);
+    }
   }
 
+  // already ensure the top must be a integer
   int next() {
-    int ans = s.top()->getInteger();
-    s.pop();
+    int ans = st.top().getInteger();
+    st.pop();
     return ans;
   }
 
   bool hasNext() {
-    while (!s.empty()) {
-      NestedInteger *p = s.top();
-      if (p->isInteger())
+    // if the stack is not empty, must have the next
+    while (!st.empty()) {
+      NestedInteger tmp = st.top();
+      // if it's a single integer, directly return true
+      if (tmp.isInteger())
         return true;
 
-      vector<NestedInteger> &l = p->getList();
-      s.pop();
-      for (int i = l.size() - 1; i >= 0; i--) // remove []
-        s.push(&l[i]);
+      // else, need to flatten it
+      vector<NestedInteger> list = tmp.getList();
+      // pop this list from stack
+      st.pop();
+      // push integers into stack in reverse order
+      for (int i = list.size() - 1; i >= 0; i--) {
+        st.push(list[i]);
+      }
     }
-    return false; // if stack empty, no more element
+
+    // if the stack is empty, no next
+    return false;
   }
 };
 

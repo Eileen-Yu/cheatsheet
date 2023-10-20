@@ -66,3 +66,44 @@ public:
  * NestedIterator i(nestedList);
  * while (i.hasNext()) cout << i.next();
  */
+
+// 2. use recursion to flatten the nestedList in advance
+class NestedIterator {
+public:
+  // array of the flattened list
+  vector<int> flattenedList;
+  // idx to loop the flattenedList
+  int idx;
+
+  NestedIterator(vector<NestedInteger> &nestedList) {
+    // init the value
+    flattenedList = flatten(nestedList);
+    idx = 0;
+  }
+
+  int next() { return flattenedList[idx++]; }
+
+  bool hasNext() { return idx < flattenedList.size(); }
+
+  // recursion helper
+  vector<int> flatten(vector<NestedInteger> &nestedList) {
+    vector<int> ans;
+
+    // loop each item in the nested list
+    for (auto i : nestedList) {
+      // if it's a single integer
+      if (i.isInteger())
+        ans.push_back(i.getInteger());
+
+      else {
+        vector<NestedInteger> list = i.getList();
+        // flatten the nested list recursively
+        auto flattenedList = flatten(list);
+        // append this flattened list to the end of the current ans
+        ans.insert(ans.end(), flattenedList.begin(), flattenedList.end());
+      }
+    }
+
+    return ans;
+  }
+};

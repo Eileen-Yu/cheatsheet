@@ -1,6 +1,7 @@
 // https://leetcode.com/problems/sort-integers-by-the-number-of-1-bits/
 // bit manipulation: count the # of 1's in bit representation
 
+// 1. use map to record the number of 1's of each num
 class Solution {
 public:
   vector<int> sortByBits(vector<int> &arr) {
@@ -38,5 +39,24 @@ public:
     }
 
     return ans;
+  }
+};
+
+// 2. directly use lambda function to customize the sorting rule
+class Solution {
+public:
+  vector<int> sortByBits(vector<int> &arr) {
+    // use the lambda function to customize how to sort the nums in the arr
+    sort(arr.begin(), arr.end(), [](const int &a, int &b) {
+      // __builtin_popcount() count the # of 1's in the bit representation of a
+      // number
+      int countA = __builtin_popcount(a);
+      int countB = __builtin_popcount(b);
+
+      // if the # of 1's are the same: return the smaller one first
+      return countA == countB ? a < b : countA < countB;
+    });
+
+    return arr;
   }
 };

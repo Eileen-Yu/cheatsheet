@@ -30,3 +30,61 @@ public:
     return reverseMp.rbegin()->second;
   }
 };
+
+// 2. use BST feature: ascending (same idea can be applied to array)
+// in-order traversal, record:
+// (1). value of last node
+// (2). max frequency til now
+// (3). current frequency of this specific value
+class Solution {
+public:
+  // frequency of this current value
+  int curFreq = 0;
+  // max frequency in the whole tree
+  int maxFreq = 0;
+  // value of the last node
+  int prev = INT_MIN;
+
+  vector<int> ans;
+
+  void recursion(TreeNode *node) {
+    // when to return
+    if (!node)
+      return;
+
+    // in-order traversal
+    recursion(node->left);
+
+    // main logic:
+    // 1. if the current node value == last node value
+    if (node->val == prev)
+      curFreq++;
+    else
+      curFreq = 1;
+
+    // 2. check if needs to update ans
+    // 2.1 if node with more frequency occurs
+    if (curFreq > maxFreq) {
+      // empty the original ans
+      ans.clear();
+      // this value become the ans
+      ans.push_back(node->val);
+      // update maxFreq
+      maxFreq = curFreq;
+    }
+    // 2.2 if multiple most frequency
+    else if (curFreq == maxFreq)
+      ans.push_back(node->val);
+
+    // 3. update prev value
+    prev = node->val;
+
+    // in-order traversal
+    recursion(node->right);
+  }
+
+  vector<int> findMode(TreeNode *root) {
+    recursion(root);
+    return ans;
+  }
+};

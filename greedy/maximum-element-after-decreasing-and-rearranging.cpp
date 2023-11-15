@@ -23,3 +23,25 @@ public:
     return arr.back();
   }
 };
+
+// 2. don't need to really modify the original arr, just needs to confirm the
+// num on each position
+class Solution {
+public:
+  int maximumElementAfterDecrementingAndRearranging(vector<int> &arr) {
+    // sort from small to big
+    sort(arr.begin(), arr.end());
+
+    int prev = 0;
+    // loop each num in the arr
+    for (auto i : arr) {
+      // don't need to modify the original arr, just need to confirm the num on
+      // this position after operations the maximum possible num on this
+      // possition = prev + 1, but can only via decrease
+      prev = min(prev + 1, i);
+    }
+
+    // the last num in the arr is the max
+    return prev;
+  }
+};

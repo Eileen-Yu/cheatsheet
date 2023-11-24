@@ -52,3 +52,37 @@ public:
     return ans;
   }
 };
+
+// 2. direct way, try to construct all possible substrings, and check if that
+// substring contains any forbidden words
+class Solution {
+public:
+  int longestValidSubstring(string word, vector<string> &forbidden) {
+    int n = word.length();
+    int ans = 0;
+
+    // construct every possible substrings
+    for (int start = 0; start < n; ++start) {
+      // single char is valid, so end = start
+      for (int end = start; end < n; ++end) {
+        string substring = word.substr(start, end - start + 1);
+        bool isValid = true;
+
+        // check if the substring contains any forbidden word
+        for (const string &f : forbidden) {
+          if (substring.find(f) != string::npos) {
+            isValid = false;
+            break;
+          }
+        }
+
+        // if this substring is valid, update ans if necessary
+        if (isValid) {
+          ans = max(ans, end - start + 1);
+        }
+      }
+    }
+
+    return ans;
+  }
+};

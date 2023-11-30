@@ -1,5 +1,6 @@
 // https://leetcode.com/problems/subsets/description/
 // pick / not pick the current element, each time 2 branches
+// simialr to: https://leetcode.com/problems/generate-parentheses/description/
 // use set to avoid duplications
 class Solution {
 public:
